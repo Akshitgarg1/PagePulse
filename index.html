@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PagePulse: OS Memory Management Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>PagePulse <span class="subtitle">OS Memory Management Simulation</span></h1>
+        <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+    
+    <main>
+        <section class="simulation-inputs">
+            <div class="input-group">
+                <label for="referenceString">Reference String:</label>
+                <input type="text" id="referenceString" placeholder="e.g., 7, 0, 1, 2, 0, 3, 0, 4">
+                <button id="randomizeBtn" title="Generate Random Reference String">
+                    <i class="fas fa-dice"></i>
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <label for="frameCount">Number of Frames:</label>
+                <input type="number" id="frameCount" min="1" max="10" value="3">
+            </div>
+            
+            <div class="input-group">
+                <label>Algorithm:</label>
+                <div class="radio-group">
+                    <input type="radio" id="fifo" name="algorithm" value="fifo" checked>
+                    <label for="fifo">FIFO</label>
+                    
+                    <input type="radio" id="lru" name="algorithm" value="lru">
+                    <label for="lru">LRU</label>
+                    
+                    <input type="radio" id="optimal" name="algorithm" value="optimal">
+                    <label for="optimal">Optimal</label>
+                    
+                    <input type="radio" id="lfu" name="algorithm" value="lfu">
+                    <label for="lfu">LFU</label>
+                    
+                    <input type="radio" id="clock" name="algorithm" value="clock">
+                    <label for="clock">Clock</label>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="startBtn" class="primary-btn">Start Simulation</button>
+                <button id="compareBtn" class="secondary-btn">Compare Algorithms</button>
+                <button id="clearBtn" class="secondary-btn">Clear</button>
+            </div>
+        </section>
+        
+        <section class="simulation-container">
+            <div class="simulation-header">
+                <h2>Simulation</h2>
+                <div class="simulation-controls">
+                    <button id="prevStepBtn" disabled title="Previous Step"><i class="fas fa-step-backward"></i></button>
+                    <button id="nextStepBtn" disabled title="Next Step"><i class="fas fa-step-forward"></i></button>
+                    <button id="playBtn" disabled title="Play Simulation"><i class="fas fa-play"></i></button>
+                    <div class="speed-control">
+                        <label for="simulationSpeed">Speed:</label>
+                        <input type="range" id="simulationSpeed" min="1" max="10" value="5">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="simulation-content">
+                <div class="current-step">
+                    <div class="step-info">
+                        <p>Page Reference: <span id="currentPage">-</span></p>
+                        <p>Step: <span id="currentStep">0</span> / <span id="totalSteps">0</span></p>
+                    </div>
+                    <div class="step-result">
+                        <p>Result: <span id="stepResult">-</span></p>
+                    </div>
+                </div>
+                
+                <div class="memory-frames" id="memoryFrames">
+                    <!-- Frames will be generated dynamically -->
+                </div>
+                
+                <div class="reference-string-visual" id="referenceStringVisual">
+                    <!-- Reference string visualization will be generated dynamically -->
+                </div>
+            </div>
+        </section>
+        
+        <section class="educational-mode">
+            <div class="theory-tabs">
+                <div class="tab-header">
+                    <button class="tab-btn active" data-tab="fifo-theory">FIFO</button>
+                    <button class="tab-btn" data-tab="lru-theory">LRU</button>
+                    <button class="tab-btn" data-tab="optimal-theory">Optimal</button>
+                    <button class="tab-btn" data-tab="lfu-theory">LFU</button>
+                    <button class="tab-btn" data-tab="clock-theory">Clock</button>
+                </div>
+                
+                <div class="tab-content">
+                    <div class="tab-pane active" id="fifo-theory">
+                        <h3>First In First Out (FIFO)</h3>
+                        <div class="theory-content">
+                            <div class="theory-text">
+                                <h4>Overview</h4>
+                                <p>FIFO is one of the simplest page replacement algorithms. It replaces the page that has been in memory the longest.</p>
+                                
+                                <h4>How it Works</h4>
+                                <ul>
+                                    <li>Maintains a queue of pages in the order they were loaded</li>
+                                    <li>When a page fault occurs, replaces the oldest page</li>
+                                    <li>New pages are added to the end of the queue</li>
+                                </ul>
+                                
+                                <h4>Use Cases</h4>
+                                <ul>
+                                    <li>Simple systems with limited resources</li>
+                                    <li>When page access patterns are random</li>
+                                    <li>When implementation simplicity is important</li>
+                                </ul>
+                                
+                                <h4>Advantages</h4>
+                                <ul>
+                                    <li>Simple to implement</li>
+                                    <li>Low overhead</li>
+                                    <li>Fair to all pages</li>
+                                </ul>
+                                
+                                <h4>Disadvantages</h4>
+                                <ul>
+                                    <li>Doesn't consider page usage frequency</li>
+                                    <li>May replace frequently used pages</li>
+                                    <li>Not optimal for most real-world scenarios</li>
+                                </ul>
+                            </div>
+                            <div class="theory-animation" id="fifo-animation">
+                                <!-- Animation will be added via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="lru-theory">
+                        <h3>Least Recently Used (LRU)</h3>
+                        <div class="theory-content">
+                            <div class="theory-text">
+                                <h4>Overview</h4>
+                                <p>LRU replaces the page that hasn't been used for the longest period of time.</p>
+                                
+                                <h4>How it Works</h4>
+                                <ul>
+                                    <li>Tracks when each page was last accessed</li>
+                                    <li>Replaces the least recently used page on a fault</li>
+                                    <li>Updates access time on each page reference</li>
+                                </ul>
+                                
+                                <h4>Use Cases</h4>
+                                <ul>
+                                    <li>Most real-world applications</li>
+                                    <li>Systems with temporal locality</li>
+                                    <li>When page usage patterns are important</li>
+                                </ul>
+                                
+                                <h4>Advantages</h4>
+                                <ul>
+                                    <li>Considers page usage patterns</li>
+                                    <li>Good performance in practice</li>
+                                    <li>Adapts to changing access patterns</li>
+                                </ul>
+                                
+                                <h4>Disadvantages</h4>
+                                <ul>
+                                    <li>Higher implementation complexity</li>
+                                    <li>Requires tracking page access times</li>
+                                    <li>May not be optimal for all scenarios</li>
+                                </ul>
+                            </div>
+                            <div class="theory-animation" id="lru-animation">
+                                <!-- Animation will be added via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="optimal-theory">
+                        <h3>Optimal Page Replacement</h3>
+                        <div class="theory-content">
+                            <div class="theory-text">
+                                <h4>Overview</h4>
+                                <p>The Optimal algorithm replaces the page that will not be used for the longest time in the future.</p>
+                                
+                                <h4>How it Works</h4>
+                                <ul>
+                                    <li>Looks ahead in the reference string</li>
+                                    <li>Replaces the page that won't be needed soonest</li>
+                                    <li>Requires future knowledge of page references</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="results-container">
+            <h2>Results</h2>
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Page Faults</h3>
+                    <p id="pageFaults">0</p>
+                </div>
+                <div class="result-card">
+                    <h3>Page Hits</h3>
+                    <p id="pageHits">0</p>
+                </div>
+                <div class="result-card">
+                    <h3>Fault Ratio</h3>
+                    <p id="faultRatio">0%</p>
+                </div>
+                <div class="result-card">
+                    <h3>Hit Ratio</h3>
+                    <p id="hitRatio">0%</p>
+                </div>
+            </div>
+            
+            <div class="export-share-container">
+                <div class="export-options">
+                    <button id="exportPDFBtn" class="export-btn" title="Export as PDF">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button id="exportCSVBtn" class="export-btn" title="Export as CSV">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="timeline-container">
+            <h2>Memory Timeline</h2>
+            <div class="timeline-controls">
+                <button id="zoomInBtn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                <button id="zoomOutBtn" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                <button id="resetZoomBtn" title="Reset Zoom"><i class="fas fa-sync"></i></button>
+            </div>
+            <div class="timeline-wrapper">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </section>
+        
+        <section class="comparison-container" id="comparisonContainer">
+            <h2>Algorithm Comparison</h2>
+            <div class="comparison-results" id="comparisonResults">
+                <!-- Comparison results will be generated dynamically -->
+            </div>
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>PagePulse: A Simulation Tool for OS Memory Management and Page Replacement</p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <script src="theme.js"></script>
+    <script src="timeline.js"></script>
+</body>
+</html> 
