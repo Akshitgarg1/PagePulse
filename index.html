@@ -139,7 +139,7 @@
                                 </ul>
                             </div>
                             <div class="theory-animation" id="fifo-animation">
-                                <!-- Animation will be added via JavaScript -->
+                                <img src="fifo.jpg" alt="FIFO Algorithm Illustration" style="max-width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                 </ul>
                             </div>
                             <div class="theory-animation" id="lru-animation">
-                                <!-- Animation will be added via JavaScript -->
+                                <img src="lru.jpeg" alt="LRU Algorithm Illustration" style="max-width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
                             </div>
                         </div>
                     </div>
@@ -198,6 +198,88 @@
                                     <li>Replaces the page that won't be needed soonest</li>
                                     <li>Requires future knowledge of page references</li>
                                 </ul>
+                            </div>
+                            <div class="theory-animation" id="optimal-animation">
+                                <img src="optimal.jpg" alt="Optimal Algorithm Illustration" style="max-width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="lfu-theory">
+                        <h3>Least Frequently Used (LFU)</h3>
+                        <div class="theory-content">
+                            <div class="theory-text">
+                                <h4>Overview</h4>
+                                <p>LFU replaces the page that has been used the least number of times. It is based on the idea that pages with lower access frequency are less likely to be needed again soon.</p>
+                                <h4>How it Works</h4>
+                                <ul>
+                                    <li>Keeps a count of how often each page is accessed</li>
+                                    <li>When a page fault occurs, replaces the page with the lowest frequency</li>
+                                    <li>If multiple pages have the same frequency, uses the oldest among them</li>
+                                </ul>
+                                <h4>Use Cases</h4>
+                                <ul>
+                                    <li>Workloads with clear frequency patterns</li>
+                                    <li>Systems where some pages are accessed much more often than others</li>
+                                    <li>When minimizing page faults is critical</li>
+                                </ul>
+                                <h4>Advantages</h4>
+                                <ul>
+                                    <li>Considers how often pages are used</li>
+                                    <li>Can outperform FIFO and LRU in some scenarios</li>
+                                    <li>Reduces replacement of frequently used pages</li>
+                                </ul>
+                                <h4>Disadvantages</h4>
+                                <ul>
+                                    <li>More complex to implement (needs frequency tracking)</li>
+                                    <li>May not adapt quickly to changing access patterns</li>
+                                    <li>Can suffer from the "cache pollution" problem if old pages accumulate frequency</li>
+                                </ul>
+                            </div>
+                            <div class="theory-animation" id="lfu-animation">
+                                <img src="LFU.png" alt="LFU Algorithm Illustration" style="max-width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="clock-theory">
+                        <h3>Clock (Second Chance) Algorithm</h3>
+                        <div class="theory-content">
+                            <div class="theory-text">
+                                <h4>Overview</h4>
+                                <p>The Clock algorithm, also known as Second Chance, is an efficient approximation of LRU. It uses a circular buffer and reference bits to decide which page to replace.</p>
+                                <h4>How it Works</h4>
+                                <ul>
+                                    <li>Pages are arranged in a circular list (like a clock)</li>
+                                    <li>Each page has a reference bit (0 or 1)</li>
+                                    <li>When a page fault occurs, the algorithm checks the next page in the circle:</li>
+                                    <ul>
+                                        <li>If the reference bit is 0, that page is replaced</li>
+                                        <li>If the reference bit is 1, it is set to 0 and the pointer moves to the next page</li>
+                                    </ul>
+                                    <li>Gives pages a "second chance" before replacement</li>
+                                </ul>
+                                <h4>Use Cases</h4>
+                                <ul>
+                                    <li>Operating systems (widely used in practice)</li>
+                                    <li>Systems needing a balance between performance and simplicity</li>
+                                    <li>When LRU is too costly to implement</li>
+                                </ul>
+                                <h4>Advantages</h4>
+                                <ul>
+                                    <li>Efficient and simple to implement</li>
+                                    <li>Approximates LRU behavior</li>
+                                    <li>Low overhead (uses a single reference bit per page)</li>
+                                </ul>
+                                <h4>Disadvantages</h4>
+                                <ul>
+                                    <li>Not as precise as true LRU</li>
+                                    <li>May give too many second chances to some pages</li>
+                                    <li>Performance depends on access patterns</li>
+                                </ul>
+                            </div>
+                            <div class="theory-animation" id="clock-animation">
+                                <img src="second chance.jpeg" alt="Clock (Second Chance) Algorithm Illustration" style="max-width:100%; max-height:300px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
                             </div>
                         </div>
                     </div>
@@ -270,4 +352,4 @@
     <script src="theme.js"></script>
     <script src="timeline.js"></script>
 </body>
-</html> 
+</html>
